@@ -118,6 +118,6 @@ main() {
 
 apt-get update
 apt-get install -y -qq apt-transport-https
-apt-get install -y -qq curl ca-certificates
+apt-get install -y -qq python curl ca-certificates
 
 main "${@:-}"
