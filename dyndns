@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+
+set -o nounset -o pipefail -o errexit
+
+var_read() {
+  local SECRET_ARG
+  if [[ ${3:-} == "secret" ]]; then
+    SECRET_ARG="-s"
+  fi
+
+  if [[ -z ${!1:-} ]]; then
+    if [[ -z ${SCRIPTS_NO_INTERACTIVE:-} ]]; then
+      read ${SECRET_ARG?} -r -p "${1}${2:+ [${2}]}=" READ_VALUE
+    fi
+
+    eval "${1}=${READ_VALUE:-${2}}"
+
+    if [[ ${SECRET_ARG} == "-s" ]]; then
+      printf "\n"
+    fi
+  elif [[ ${SECRET_ARG} != "-s" ]]; then
+    printf "%s=%s\n" "${1}" "${!1}"
+  else
+    printf "Using secret %s\n" "${1}"
+  fi
+}
+
+var_color() {
+  export RED='\033[0;31m'
+  export GREEN='\033[0;32m'
+  export BLUE='\033[0;34m'
+  export YELLOW='\033[33m'
+  export RESET='\033[0m'
+}
+
+update_record() {
+  local DOMAIN="${1}"
+  local TYPE="${2}"
+  local VALUE="${3}"
+
+  HTTP_STATUS="$("${CLIENT_ARGS[@]}" "${BASE_URL}/zones/${CLOUDFLARE_ZONE}/dns_records?type=${TYPE}&name=dyndns.${domain}")"
+  if [[ ${HTTP_STATUS} != "200" ]]; then
+    printf "%bUnable to get ${TYPE} record for ${DOMAIN}%b\n" "${RED}" "${RESET}"
+    cat "${HTTP_OUTPUT}" && rm "${HTTP_OUTPUT}"
+    return
+  fi
+
+  local PAYLOAD="{
+      \"type\": \"${TYPE}\",
+      \"name\": \"dyndns.${DOMAIN}\",
+      \"content\": \"${VALUE}\",
+      \"ttl\": 1
+    }"
+
+  if [[ $(python -c "import json; print(json.load(open('${HTTP_OUTPUT}'))['result_info']['count'])") -eq 0 ]]; then
+    printf "%bCreating record ${TYPE} for ${DOMAIN}%b\n" "${BLUE}" "${RESET}"
+
+    HTTP_STATUS="$("${CLIENT_ARGS[@]}" "-X" "POST" "${BASE_URL}/zones/${CLOUDFLARE_ZONE}/dns_records" "-d" "${PAYLOAD}")"
+    if [[ ${HTTP_STATUS} != "200" ]]; then
+      printf "%bUnable to create ${TYPE} record for ${DOMAIN}%b\n" "${RED}" "${RESET}"
+      cat "${HTTP_OUTPUT}" && rm "${HTTP_OUTPUT}"
+      return
+    fi
+  else
+    printf "%bUpdating record ${TYPE} for ${DOMAIN}%b\n" "${BLUE}" "${RESET}"
+
+    local RECORD_ID
+    RECORD_ID="$(python -c "import json; print(json.load(open('${HTTP_OUTPUT}'))['result'][0]['id'])")"
+    rm "${HTTP_OUTPUT}"
+
+    HTTP_STATUS="$("${CLIENT_ARGS[@]}" "-X" "PUT" "${BASE_URL}/zones/${CLOUDFLARE_ZONE}/dns_records/${RECORD_ID}" "-d" "${PAYLOAD}")"
+    if [[ ${HTTP_STATUS} != "200" ]]; then
+      printf "%bUnable to update ${TYPE} record for ${DOMAIN}%b\n" "${RED}" "${RESET}"
+      cat "${HTTP_OUTPUT}" && rm "${HTTP_OUTPUT}"
+      return
+    fi
+  fi
+
+  rm "${HTTP_OUTPUT}"
+}
+
+main() {
+  local BASE_URL="https://api.cloudflare.com/client/v4"
+
+  var_color
+  var_read CLOUDFLARE_TOKEN "" secret
+
+  local IPV4
+  IPV4="$(curl -q -sSL --max-time 30 -4 "https://ifconfig.co" | tr -d '\n')"
+
+  local IPV6
+  set +e
+  IPV6="$(curl -q -sSL --max-time 30 -6 "https://ifconfig.co" 2> /dev/null | tr -d '\n')"
+  set -e
+
+  local HTTP_STATUS
+  local HTTP_OUTPUT="http_output.txt"
+  local CLIENT_ARGS=("curl" "-q" "-sSL" "--max-time" "30" "-o" "${HTTP_OUTPUT}" "-w" "%{http_code}" "-H" "Authorization: Bearer ${CLOUDFLARE_TOKEN}" "-H" "Content-Type: application/json")
+
+  for domain in "${@}"; do
+    HTTP_STATUS="$("${CLIENT_ARGS[@]}" "${BASE_URL}/zones?name=${domain}")"
+    if [[ ${HTTP_STATUS} != "200" ]]; then
+      printf "%bUnable to get zone for ${domain}%b\n" "${RED}" "${RESET}"
+      cat "${HTTP_OUTPUT}" && rm "${HTTP_OUTPUT}"
+      return
+    fi
+
+    local CLOUDFLARE_ZONE
+    CLOUDFLARE_ZONE="$(python -c "import json; print(json.load(open('${HTTP_OUTPUT}'))['result'][0]['id'])")"
+    rm "${HTTP_OUTPUT}"
+
+    update_record "${domain}" A "${IPV4}"
+    if [[ -n ${IPV6} ]]; then
+      update_record "${domain}" AAAA "${IPV6}"
+    fi
+  done
+}
+
+main "${@:-}"
