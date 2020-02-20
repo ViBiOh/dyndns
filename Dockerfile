@@ -1,4 +1,4 @@
-FROM alpine
+FROM debian:stable-slim
 
 ENTRYPOINT [ "/dyndns" ]
 
