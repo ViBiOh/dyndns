@@ -74,8 +74,6 @@ func (a app) Do(ip string) error {
 		return fmt.Errorf("unable to list dns records: %s", err)
 	}
 
-	fmt.Println(ip)
-
 	dnsRecord.Content = ip
 	dnsRecord.Proxied = a.proxied
 
