@@ -2,7 +2,7 @@ package dyndns
 
 import (
 	"flag"
-	"log"
+	"fmt"
 	"strings"
 
 	"github.com/ViBiOh/httputils/v3/pkg/flags"
@@ -47,7 +47,7 @@ func Flags(fs *flag.FlagSet, prefix string) Config {
 func New(config Config) (App, error) {
 	api, err := cloudflare.NewWithAPIToken(strings.TrimSpace(*config.token))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("unable to create API client: %s", err)
 	}
 
 	return &app{
@@ -62,24 +62,26 @@ func New(config Config) (App, error) {
 func (a app) Do(ip string) error {
 	zoneID, err := a.api.ZoneIDByName(a.domain)
 	if err != nil {
-		return err
+		return fmt.Errorf("unable to found zone by name: %s", err)
 	}
 
 	dnsRecord := cloudflare.DNSRecord{
 		Type: a.recordType,
-		Name: a.entry,
+		Name: fmt.Sprintf("%s.%s", a.entry, a.domain),
 	}
 	records, err := a.api.DNSRecords(zoneID, dnsRecord)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("unable to list dns records: %s", err)
 	}
+
+	fmt.Println(ip)
 
 	dnsRecord.Content = ip
 	dnsRecord.Proxied = a.proxied
 
 	if len(records) == 0 {
 		_, err := a.api.CreateDNSRecord(zoneID, dnsRecord)
-		return err
+		return fmt.Errorf("unable to create dns record: %s", err)
 	}
 	return a.api.UpdateDNSRecord(zoneID, records[0].ID, dnsRecord)
 }
