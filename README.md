@@ -28,6 +28,4 @@ Usage of dyndns:
         [dyndns] Proxied {DYNDNS_PROXIED}
   -token string
         [dyndns] Cloudflare token {DYNDNS_TOKEN}
-  -type string
-        [dyndns] DNS Entry Type {DYNDNS_TYPE} (default "A")
 ```
