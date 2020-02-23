@@ -3,6 +3,7 @@ package dyndns
 import (
 	"flag"
 	"fmt"
+	"net"
 	"strings"
 
 	"github.com/ViBiOh/httputils/v3/pkg/flags"
@@ -16,18 +17,16 @@ type App interface {
 
 // Config of package
 type Config struct {
-	token      *string
-	domain     *string
-	recordType *string
-	entry      *string
-	proxied    *bool
+	token   *string
+	domain  *string
+	entry   *string
+	proxied *bool
 }
 
 type app struct {
-	domain     string
-	recordType string
-	entry      string
-	proxied    bool
+	domain  string
+	entry   string
+	proxied bool
 
 	api *cloudflare.API
 }
@@ -35,11 +34,10 @@ type app struct {
 // Flags adds flags for configuring package
 func Flags(fs *flag.FlagSet, prefix string) Config {
 	return Config{
-		token:      flags.New(prefix, "dyndns").Name("Token").Default("").Label("Cloudflare token").ToString(fs),
-		domain:     flags.New(prefix, "dyndns").Name("Domain").Default("").Label("Domain to configure").ToString(fs),
-		recordType: flags.New(prefix, "dyndns").Name("Type").Default("A").Label("DNS Entry Type").ToString(fs),
-		entry:      flags.New(prefix, "dyndns").Name("Entry").Default("dyndns").Label("DNS Entry CNAME").ToString(fs),
-		proxied:    flags.New(prefix, "dyndns").Name("Proxied").Default(false).Label("Proxied").ToBool(fs),
+		token:   flags.New(prefix, "dyndns").Name("Token").Default("").Label("Cloudflare token").ToString(fs),
+		domain:  flags.New(prefix, "dyndns").Name("Domain").Default("").Label("Domain to configure").ToString(fs),
+		entry:   flags.New(prefix, "dyndns").Name("Entry").Default("dyndns").Label("DNS Entry CNAME").ToString(fs),
+		proxied: flags.New(prefix, "dyndns").Name("Proxied").Default(false).Label("Proxied").ToBool(fs),
 	}
 }
 
@@ -51,9 +49,8 @@ func New(config Config) (App, error) {
 	}
 
 	return &app{
-		domain:     strings.TrimSpace(*config.domain),
-		recordType: strings.TrimSpace(*config.recordType),
-		entry:      strings.TrimSpace(*config.entry),
+		domain: strings.TrimSpace(*config.domain),
+		entry:  strings.TrimSpace(*config.entry),
 
 		api: api,
 	}, nil
@@ -65,8 +62,13 @@ func (a app) Do(ip string) error {
 		return fmt.Errorf("unable to found zone by name: %s", err)
 	}
 
+	dnsType := "A"
+	if len(ip) == net.IPv6len {
+		dnsType = "AAAA"
+	}
+
 	dnsRecord := cloudflare.DNSRecord{
-		Type: a.recordType,
+		Type: dnsType,
 		Name: fmt.Sprintf("%s.%s", a.entry, a.domain),
 	}
 	records, err := a.api.DNSRecords(zoneID, dnsRecord)
