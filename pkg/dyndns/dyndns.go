@@ -49,8 +49,9 @@ func New(config Config) (App, error) {
 	}
 
 	return &app{
-		domain: strings.TrimSpace(*config.domain),
-		entry:  strings.TrimSpace(*config.entry),
+		domain:  strings.TrimSpace(*config.domain),
+		entry:   strings.TrimSpace(*config.entry),
+		proxied: *config.proxied,
 
 		api: api,
 	}, nil
