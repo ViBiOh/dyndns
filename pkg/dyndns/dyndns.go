@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/ViBiOh/httputils/v3/pkg/flags"
+	"github.com/ViBiOh/httputils/v3/pkg/logger"
 	cloudflare "github.com/cloudflare/cloudflare-go"
 )
 
@@ -81,8 +82,15 @@ func (a app) Do(ip string) error {
 	dnsRecord.Proxied = a.proxied
 
 	if len(records) == 0 {
+		logger.Info("Creating %s %s -> %s record", dnsRecord.Type, dnsRecord.Name, dnsRecord.Content)
 		_, err := a.api.CreateDNSRecord(zoneID, dnsRecord)
-		return fmt.Errorf("unable to create dns record: %s", err)
+		if err != nil {
+			return fmt.Errorf("unable to create dns record: %s", err)
+		}
+
+		return nil
 	}
+
+	logger.Info("Updating %s %s -> %s record", dnsRecord.Type, dnsRecord.Name, dnsRecord.Content)
 	return a.api.UpdateDNSRecord(zoneID, records[0].ID, dnsRecord)
 }
