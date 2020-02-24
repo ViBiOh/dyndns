@@ -22,5 +22,7 @@ func main() {
 	ip, err := ip.Get()
 	logger.Fatal(err)
 
+	logger.Info("Current IP is : %s", ip)
+
 	logger.Fatal(dyndnsApp.Do(ip))
 }
