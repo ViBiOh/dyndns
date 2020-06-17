@@ -3,7 +3,6 @@
 [![Build Status](https://travis-ci.com/ViBiOh/dyndns.svg?branch=master)](https://travis-ci.com/ViBiOh/dyndns)
 [![codecov](https://codecov.io/gh/ViBiOh/dyndns/branch/master/graph/badge.svg)](https://codecov.io/gh/ViBiOh/dyndns)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ViBiOh/dyndns)](https://goreportcard.com/report/github.com/ViBiOh/dyndns)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=ViBiOh/dyndns)](https://dependabot.com)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ViBiOh_dyndns&metric=alert_status)](https://sonarcloud.io/dashboard?id=ViBiOh_dyndns)
 
 ## CI
