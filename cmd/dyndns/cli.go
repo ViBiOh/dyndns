@@ -19,10 +19,10 @@ func main() {
 	dyndnsApp, err := dyndns.New(dyndnsConfig)
 	logger.Fatal(err)
 
-	ip, err := ip.Get()
+	currentIP, err := ip.Get()
 	logger.Fatal(err)
 
-	logger.Info("Current IP is : %s", ip)
+	logger.Info("Current IP is : %s", currentIP)
 
-	logger.Fatal(dyndnsApp.Do(ip))
+	logger.Fatal(dyndnsApp.Do(currentIP))
 }
