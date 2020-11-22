@@ -23,6 +23,8 @@ Usage of dyndns:
         [dyndns] Domain to configure {DYNDNS_DOMAIN}
   -entry string
         [dyndns] DNS Entry CNAME {DYNDNS_ENTRY} (default "dyndns")
+  -network string
+        [ip] Network {DYNDNS_NETWORK} (default "tcp4")
   -proxied
         [dyndns] Proxied {DYNDNS_PROXIED}
   -token string
