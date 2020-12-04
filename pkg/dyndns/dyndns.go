@@ -25,11 +25,12 @@ type Config struct {
 }
 
 type app struct {
-	domain  string
-	entry   string
-	proxied bool
-
 	api *cloudflare.API
+
+	domain string
+	entry  string
+
+	proxied bool
 }
 
 // Flags adds flags for configuring package
