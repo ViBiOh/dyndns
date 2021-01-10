@@ -2,6 +2,7 @@ package ip
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net"
 	"net/http"
@@ -9,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/ViBiOh/httputils/v3/pkg/logger"
 	"github.com/ViBiOh/httputils/v3/pkg/request"
 )
 
@@ -44,15 +46,21 @@ func Get(wantedNetwork string) (string, error) {
 		},
 	}
 
-	response, err := request.DoWithClientAndRetry(httpClient, req, 3)
-	if err != nil {
-		return "", err
+	for i := 0; i < 3; i++ {
+		response, err := request.DoWithClient(httpClient, req)
+		if err != nil {
+			logger.Error("attempt #%d failed with error: %s", i+1, err)
+			time.Sleep(time.Second)
+			continue
+		}
+
+		content, err := request.ReadBodyResponse(response)
+		if err != nil {
+			return "", err
+		}
+
+		return strings.TrimSpace(string(content)), nil
 	}
 
-	content, err := request.ReadBodyResponse(response)
-	if err != nil {
-		return "", err
-	}
-
-	return strings.TrimSpace(string(content)), nil
+	return "", errors.New("unable to get current IP")
 }
