@@ -4,10 +4,10 @@ import (
 	"flag"
 	"os"
 
-	"github.com/ViBiOh/goweb/pkg/dyndns"
-	"github.com/ViBiOh/goweb/pkg/ip"
-	"github.com/ViBiOh/httputils/v3/pkg/flags"
-	"github.com/ViBiOh/httputils/v3/pkg/logger"
+	"github.com/ViBiOh/dyndns/pkg/dyndns"
+	"github.com/ViBiOh/dyndns/pkg/ip"
+	"github.com/ViBiOh/httputils/v4/pkg/flags"
+	"github.com/ViBiOh/httputils/v4/pkg/logger"
 )
 
 func main() {
