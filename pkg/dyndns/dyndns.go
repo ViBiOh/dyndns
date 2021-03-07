@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"net"
 	"strings"
+	"time"
 
 	"github.com/ViBiOh/httputils/v4/pkg/flags"
 	"github.com/ViBiOh/httputils/v4/pkg/logger"
 	"github.com/cloudflare/cloudflare-go"
+	"golang.org/x/net/context"
 )
 
 // App of package
@@ -60,6 +62,9 @@ func New(config Config) (App, error) {
 }
 
 func (a app) Do(ip string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
+
 	zoneID, err := a.api.ZoneIDByName(a.domain)
 	if err != nil {
 		return fmt.Errorf("unable to found zone by name: %s", err)
@@ -74,17 +79,17 @@ func (a app) Do(ip string) error {
 		Type: dnsType,
 		Name: fmt.Sprintf("%s.%s", a.entry, a.domain),
 	}
-	records, err := a.api.DNSRecords(zoneID, dnsRecord)
+	records, err := a.api.DNSRecords(ctx, zoneID, dnsRecord)
 	if err != nil {
 		return fmt.Errorf("unable to list dns records: %s", err)
 	}
 
 	dnsRecord.Content = ip
-	dnsRecord.Proxied = a.proxied
+	dnsRecord.Proxied = &a.proxied
 
 	if len(records) == 0 {
 		logger.Info("Creating %s %s -> %s record", dnsRecord.Type, dnsRecord.Name, dnsRecord.Content)
-		_, err := a.api.CreateDNSRecord(zoneID, dnsRecord)
+		_, err := a.api.CreateDNSRecord(ctx, zoneID, dnsRecord)
 		if err != nil {
 			return fmt.Errorf("unable to create dns record: %s", err)
 		}
@@ -93,5 +98,5 @@ func (a app) Do(ip string) error {
 	}
 
 	logger.Info("Updating %s %s -> %s record", dnsRecord.Type, dnsRecord.Name, dnsRecord.Content)
-	return a.api.UpdateDNSRecord(zoneID, records[0].ID, dnsRecord)
+	return a.api.UpdateDNSRecord(ctx, zoneID, records[0].ID, dnsRecord)
 }
