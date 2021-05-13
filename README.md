@@ -2,7 +2,6 @@
 
 [![Build](https://github.com/ViBiOh/dyndns/workflows/Build/badge.svg)](https://github.com/ViBiOh/dyndns/actions)
 [![codecov](https://codecov.io/gh/ViBiOh/dyndns/branch/main/graph/badge.svg)](https://codecov.io/gh/ViBiOh/dyndns)
-[![Go Report Card](https://goreportcard.com/badge/github.com/ViBiOh/dyndns)](https://goreportcard.com/report/github.com/ViBiOh/dyndns)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ViBiOh_dyndns&metric=alert_status)](https://sonarcloud.io/dashboard?id=ViBiOh_dyndns)
 
 ## CI
