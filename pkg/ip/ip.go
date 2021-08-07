@@ -47,7 +47,7 @@ func Get(wantedNetwork string) (string, error) {
 	}
 
 	for i := 0; i < 3; i++ {
-		response, err := request.DoWithClient(httpClient, req)
+		response, err := request.DoWithClient(&httpClient, req)
 		if err != nil {
 			logger.Error("attempt #%d failed with error: %s", i+1, err)
 			time.Sleep(time.Second)
