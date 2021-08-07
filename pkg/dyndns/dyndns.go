@@ -14,8 +14,13 @@ import (
 )
 
 // App of package
-type App interface {
-	Do(ip string) error
+type App struct {
+	api *cloudflare.API
+
+	domain string
+	entry  string
+
+	proxied bool
 }
 
 // Config of package
@@ -24,15 +29,6 @@ type Config struct {
 	domain  *string
 	entry   *string
 	proxied *bool
-}
-
-type app struct {
-	api *cloudflare.API
-
-	domain string
-	entry  string
-
-	proxied bool
 }
 
 // Flags adds flags for configuring package
@@ -49,10 +45,10 @@ func Flags(fs *flag.FlagSet, prefix string) Config {
 func New(config Config) (App, error) {
 	api, err := cloudflare.NewWithAPIToken(strings.TrimSpace(*config.token))
 	if err != nil {
-		return nil, fmt.Errorf("unable to create API client: %s", err)
+		return App{}, fmt.Errorf("unable to create API client: %s", err)
 	}
 
-	return &app{
+	return App{
 		domain:  strings.TrimSpace(*config.domain),
 		entry:   strings.TrimSpace(*config.entry),
 		proxied: *config.proxied,
@@ -61,7 +57,8 @@ func New(config Config) (App, error) {
 	}, nil
 }
 
-func (a app) Do(ip string) error {
+// Do update dyndns on cloudflare
+func (a App) Do(ip string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
 	defer cancel()
 
