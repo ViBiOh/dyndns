@@ -13,7 +13,7 @@ import (
 func main() {
 	fs := flag.NewFlagSet("dyndns", flag.ExitOnError)
 
-	network := flags.New("", "ip").Name("Network").Default("tcp4").Label("Network").ToString(fs)
+	network := flags.New("", "ip", "Network").Default("tcp4", nil).Label("Network").ToString(fs)
 	dyndnsConfig := dyndns.Flags(fs, "")
 
 	logger.Fatal(fs.Parse(os.Args[1:]))
