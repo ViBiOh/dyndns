@@ -15,8 +15,8 @@ import (
 )
 
 // Get returns current IP
-func Get(wantedNetwork string) (string, error) {
-	req, err := request.New().Get("https://ifconfig.co").Build(context.Background(), nil)
+func Get(url, wantedNetwork string) (string, error) {
+	req, err := request.New().Get(url).Build(context.Background(), nil)
 	if err != nil {
 		return "", err
 	}

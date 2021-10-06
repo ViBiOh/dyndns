@@ -32,4 +32,6 @@ Usage of dyndns:
         [dyndns] Proxied {DYNDNS_PROXIED}
   -token string
         [dyndns] Cloudflare token {DYNDNS_TOKEN}
+  -uRL string
+        [ip] URL for getting IPv4 or v6 {DYNDNS_URL} (default "https://api64.ipify.org")
 ```
