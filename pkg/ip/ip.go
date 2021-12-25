@@ -16,7 +16,7 @@ import (
 
 // Get returns current IP
 func Get(url, wantedNetwork string) (string, error) {
-	req, err := request.New().Get(url).Build(context.Background(), nil)
+	req, err := request.Get(url).Build(context.Background(), nil)
 	if err != nil {
 		return "", err
 	}
