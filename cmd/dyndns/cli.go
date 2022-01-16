@@ -6,7 +6,7 @@ import (
 
 	"github.com/ViBiOh/dyndns/pkg/dyndns"
 	"github.com/ViBiOh/dyndns/pkg/ip"
-	"github.com/ViBiOh/httputils/v4/pkg/flags"
+	"github.com/ViBiOh/flags"
 	"github.com/ViBiOh/httputils/v4/pkg/logger"
 )
 
