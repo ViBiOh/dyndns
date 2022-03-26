@@ -34,10 +34,10 @@ type Config struct {
 // Flags adds flags for configuring package
 func Flags(fs *flag.FlagSet, prefix string) Config {
 	return Config{
-		token:   flags.New(prefix, "dyndns", "Token").Default("", nil).Label("Cloudflare token").ToString(fs),
-		domain:  flags.New(prefix, "dyndns", "Domain").Default("", nil).Label("Domain to configure").ToString(fs),
-		entry:   flags.New(prefix, "dyndns", "Entry").Default("dyndns", nil).Label("DNS Entry CNAME").ToString(fs),
-		proxied: flags.New(prefix, "dyndns", "Proxied").Default(false, nil).Label("Proxied").ToBool(fs),
+		token:   flags.String(fs, prefix, "dyndns", "Token", "Cloudflare token", "", nil),
+		domain:  flags.String(fs, prefix, "dyndns", "Domain", "Domain to configure", "", nil),
+		entry:   flags.String(fs, prefix, "dyndns", "Entry", "DNS Entry CNAME", "dyndns", nil),
+		proxied: flags.Bool(fs, prefix, "dyndns", "Proxied", "Proxied", false, nil),
 	}
 }
 
