@@ -5,14 +5,15 @@ go 1.18
 require (
 	github.com/ViBiOh/flags v1.0.0
 	github.com/ViBiOh/httputils/v4 v4.39.3
-	github.com/cloudflare/cloudflare-go v0.35.1
-	golang.org/x/net v0.0.0-20210510120150-4163338589ed
+	github.com/cloudflare/cloudflare-go v0.36.0
+	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
 )
 
 require (
 	github.com/felixge/httpsnoop v1.0.2 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
+	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.31.0 // indirect
 	go.opentelemetry.io/otel v1.6.1 // indirect
@@ -23,5 +24,5 @@ require (
 	golang.org/x/sys v0.0.0-20220310020820-b874c991c1a5 // indirect
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	golang.org/x/time v0.0.0-20201208040808-7e3f01d25324 // indirect
+	golang.org/x/time v0.0.0-20220224211638-0e9765cccd65 // indirect
 )
