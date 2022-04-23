@@ -1,7 +1,7 @@
 github.com/ViBiOh/flags v1.0.0 h1:ECiQMH2tK04PaCkPRuziWAtxYGtx2Ej8O15ZZ2Jx4Ww=
 github.com/ViBiOh/flags v1.0.0/go.mod h1:W0YgB4Nqou2j/2vevgO3kyrcS2f+ci/+w+jDGzVZilk=
-github.com/ViBiOh/httputils/v4 v4.41.0 h1:BPtZJKaE/4WXqt4Sz8xON1T4QlRjpZD0RV8PPVyV4GE=
-github.com/ViBiOh/httputils/v4 v4.41.0/go.mod h1:ajHAkkVQYTWhcRT4/6wL7FvXHU7GAfeJ0WZ0DpO6Yu8=
+github.com/ViBiOh/httputils/v4 v4.41.1 h1:p6KUtaysyflZL1lPMGdt4XHs9xPhks0crqTv3cE//Qg=
+github.com/ViBiOh/httputils/v4 v4.41.1/go.mod h1:HCwQaW+odp5E/eYDdjuvy+mkcsHcxcI53QRSCEtPlxg=
 github.com/cloudflare/cloudflare-go v0.37.0 h1:8LUyAtev5PZ92Wzxzsm9jOQj0ZTz3BBc5F1ISfwgxvk=
 github.com/cloudflare/cloudflare-go v0.37.0/go.mod h1:EfqOgbgOTf9U+67Z5MR2t/MuVj5OjLlXs+dN6DBh6C8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -20,13 +20,13 @@ github.com/google/go-cmp v0.5.7/go.mod h1:n+brtR0CgQNWTVd5ZUFpTBC8YFBDLK/h/bpaJ8
 github.com/google/go-querystring v1.1.0 h1:AnCroh3fv4ZBgVIf1Iwtovgjaw/GiKJo8M8yD/fhyJ8=
 github.com/google/go-querystring v1.1.0/go.mod h1:Kcdr2DB4koayq7X8pmAG4sNG59So17icRSOU623lUBU=
 github.com/jackc/chunkreader/v2 v2.0.1 h1:i+RDz65UE+mmpjTfyz0MoVTnzeYxroil2G82ki7MGG8=
-github.com/jackc/pgconn v1.11.0 h1:HiHArx4yFbwl91X3qqIHtUFoiIfLNJXCQRsnzkiwwaQ=
+github.com/jackc/pgconn v1.12.0 h1:/RvQ24k3TnNdfBSW0ou9EOi5jx2cX7zfE8n2nLKuiP0=
 github.com/jackc/pgio v1.0.0 h1:g12B9UwVnzGhueNavwioyEEpAmqMe1E/BN9ES+8ovkE=
 github.com/jackc/pgpassfile v1.0.0 h1:/6Hmqy13Ss2zCq62VdNG8tM1wchn8zjSGOBJ6icpsIM=
-github.com/jackc/pgproto3/v2 v2.2.0 h1:r7JypeP2D3onoQTCxWdTpCtJ4D+qpKr0TxvoyMhZ5ns=
+github.com/jackc/pgproto3/v2 v2.3.0 h1:brH0pCGBDkBW07HWlN/oSBXrmo3WB0UvZd1pIuDcL8Y=
 github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b h1:C8S2+VttkHFdOOCXJe+YGfa4vHYwlt4Zx+IVXQ97jYg=
-github.com/jackc/pgtype v1.10.0 h1:ILnBWrRMSXGczYvmkYD6PsYyVFUNLTnIUJHHDLmqk38=
-github.com/jackc/pgx/v4 v4.15.0 h1:B7dTkXsdILD3MF987WGGCcg+tvLW6bZJdEcqVFeU//w=
+github.com/jackc/pgtype v1.11.0 h1:u4uiGPz/1hryuXzyaBhSk6dnIyyG2683olG2OV+UUgs=
+github.com/jackc/pgx/v4 v4.16.0 h1:4k1tROTJctHotannFYzu77dY3bgtMRymQP7tXQjqpPk=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
