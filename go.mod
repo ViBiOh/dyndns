@@ -5,8 +5,8 @@ go 1.18
 require (
 	github.com/ViBiOh/flags v1.1.0
 	github.com/ViBiOh/httputils/v4 v4.43.2
-	github.com/cloudflare/cloudflare-go v0.43.0
-	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
+	github.com/cloudflare/cloudflare-go v0.44.0
+	golang.org/x/net v0.0.0-20220412020605-290c469a71a5
 )
 
 require (
