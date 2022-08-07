@@ -62,5 +62,5 @@ func Get(url, wantedNetwork string) (string, error) {
 		return strings.TrimSpace(string(content)), nil
 	}
 
-	return "", errors.New("unable to get current IP")
+	return "", errors.New("get current IP")
 }
