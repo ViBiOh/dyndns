@@ -28,9 +28,9 @@ func Get(url, wantedNetwork string) (string, error) {
 		},
 		Transport: &http.Transport{
 			DialContext: (&net.Dialer{
-				Timeout:   15 * time.Second,
-				KeepAlive: 15 * time.Second,
-				DualStack: false,
+				Timeout:       15 * time.Second,
+				KeepAlive:     15 * time.Second,
+				FallbackDelay: -1,
 				Control: func(network, address string, c syscall.RawConn) error {
 					if network == wantedNetwork {
 						return nil
