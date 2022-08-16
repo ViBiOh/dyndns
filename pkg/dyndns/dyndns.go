@@ -45,7 +45,7 @@ func Flags(fs *flag.FlagSet, prefix string) Config {
 func New(config Config) (App, error) {
 	api, err := cloudflare.NewWithAPIToken(strings.TrimSpace(*config.token))
 	if err != nil {
-		return App{}, fmt.Errorf("create API client: %s", err)
+		return App{}, fmt.Errorf("create API client: %w", err)
 	}
 
 	return App{
@@ -64,7 +64,7 @@ func (a App) Do(ip string) error {
 
 	zoneID, err := a.api.ZoneIDByName(a.domain)
 	if err != nil {
-		return fmt.Errorf("found zone by name: %s", err)
+		return fmt.Errorf("found zone by name: %w", err)
 	}
 
 	dnsType := "A"
@@ -78,7 +78,7 @@ func (a App) Do(ip string) error {
 	}
 	records, err := a.api.DNSRecords(ctx, zoneID, dnsRecord)
 	if err != nil {
-		return fmt.Errorf("list dns records: %s", err)
+		return fmt.Errorf("list dns records: %w", err)
 	}
 
 	dnsRecord.Content = ip
@@ -88,7 +88,7 @@ func (a App) Do(ip string) error {
 		logger.Info("Creating %s %s -> %s record", dnsRecord.Type, dnsRecord.Name, dnsRecord.Content)
 		_, err := a.api.CreateDNSRecord(ctx, zoneID, dnsRecord)
 		if err != nil {
-			return fmt.Errorf("create dns record: %s", err)
+			return fmt.Errorf("create dns record: %w", err)
 		}
 
 		return nil
