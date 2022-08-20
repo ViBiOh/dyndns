@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/ViBiOh/flags v1.2.0
-	github.com/ViBiOh/httputils/v4 v4.46.1
+	github.com/ViBiOh/httputils/v4 v4.46.2
 	github.com/cloudflare/cloudflare-go v0.47.1
 	golang.org/x/net v0.0.0-20220805013720-a33c5aa5df48
 )
