@@ -4,9 +4,9 @@ go 1.19
 
 require (
 	github.com/ViBiOh/flags v1.2.0
-	github.com/ViBiOh/httputils/v4 v4.47.0
+	github.com/ViBiOh/httputils/v4 v4.47.3
 	github.com/cloudflare/cloudflare-go v0.49.0
-	golang.org/x/net v0.0.0-20220805013720-a33c5aa5df48
+	golang.org/x/net v0.0.0-20220826154423-83b083e8dc8b
 )
 
 require (
