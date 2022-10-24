@@ -26,6 +26,16 @@ Usage of dyndns:
         [dyndns] Domain to configure {DYNDNS_DOMAIN}
   -entry string
         [dyndns] DNS Entry CNAME {DYNDNS_ENTRY} (default "dyndns")
+  -loggerJson
+        [logger] Log format as JSON {DYNDNS_LOGGER_JSON}
+  -loggerLevel string
+        [logger] Logger level {DYNDNS_LOGGER_LEVEL} (default "INFO")
+  -loggerLevelKey string
+        [logger] Key for level in JSON {DYNDNS_LOGGER_LEVEL_KEY} (default "level")
+  -loggerMessageKey string
+        [logger] Key for message in JSON {DYNDNS_LOGGER_MESSAGE_KEY} (default "message")
+  -loggerTimeKey string
+        [logger] Key for timestamp in JSON {DYNDNS_LOGGER_TIME_KEY} (default "time")
   -network string
         [ip] Network {DYNDNS_NETWORK} (default "tcp4")
   -proxied

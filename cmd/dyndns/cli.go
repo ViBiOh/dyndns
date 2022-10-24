@@ -15,9 +15,12 @@ func main() {
 
 	url := flags.String(fs, "", "ip", "URL", "URL for getting IPv4 or v6", "https://api64.ipify.org", nil)
 	network := flags.String(fs, "", "ip", "Network", "Network", "tcp4", nil)
+	loggerConfig := logger.Flags(fs, "logger")
 	dyndnsConfig := dyndns.Flags(fs, "")
 
 	logger.Fatal(fs.Parse(os.Args[1:]))
+
+	logger.Global(logger.New(loggerConfig))
 
 	currentIP, err := ip.Get(*url, *network)
 	logger.Fatal(err)
