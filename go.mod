@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/ViBiOh/flags v1.2.0
 	github.com/ViBiOh/httputils/v4 v4.51.2
-	github.com/cloudflare/cloudflare-go v0.57.1
+	github.com/cloudflare/cloudflare-go v0.58.1
 	golang.org/x/net v0.0.0-20220826154423-83b083e8dc8b
 )
 
@@ -15,7 +15,7 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
-	github.com/hashicorp/go-retryablehttp v0.7.1 // indirect
+	github.com/hashicorp/go-retryablehttp v0.7.2 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.37.0 // indirect
 	go.opentelemetry.io/otel v1.11.2 // indirect
 	go.opentelemetry.io/otel/exporters/jaeger v1.11.2 // indirect
