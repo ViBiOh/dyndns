@@ -72,21 +72,26 @@ func (a App) Do(ip string) error {
 		dnsType = "AAAA"
 	}
 
-	dnsRecord := cloudflare.DNSRecord{
+	dnsName := fmt.Sprintf("%s.%s", a.entry, a.domain)
+
+	zoneIdentifier := cloudflare.ZoneIdentifier(zoneID)
+
+	records, results, err := a.api.ListDNSRecords(ctx, zoneIdentifier, cloudflare.ListDNSRecordsParams{
 		Type: dnsType,
-		Name: fmt.Sprintf("%s.%s", a.entry, a.domain),
-	}
-	records, err := a.api.DNSRecords(ctx, zoneID, dnsRecord)
+		Name: dnsName,
+	})
 	if err != nil {
 		return fmt.Errorf("list dns records: %w", err)
 	}
 
-	dnsRecord.Content = ip
-	dnsRecord.Proxied = &a.proxied
-
-	if len(records) == 0 {
-		logger.Info("Creating %s %s -> %s record", dnsRecord.Type, dnsRecord.Name, dnsRecord.Content)
-		_, err := a.api.CreateDNSRecord(ctx, zoneID, dnsRecord)
+	if results.Count == 0 {
+		logger.Info("Creating %s %s -> %s record", dnsType, dnsName, ip)
+		_, err := a.api.CreateDNSRecord(ctx, zoneIdentifier, cloudflare.CreateDNSRecordParams{
+			Type:    dnsType,
+			Name:    dnsName,
+			Content: ip,
+			Proxied: &a.proxied,
+		})
 		if err != nil {
 			return fmt.Errorf("create dns record: %w", err)
 		}
@@ -94,6 +99,12 @@ func (a App) Do(ip string) error {
 		return nil
 	}
 
-	logger.Info("Updating %s %s -> %s record", dnsRecord.Type, dnsRecord.Name, dnsRecord.Content)
-	return a.api.UpdateDNSRecord(ctx, zoneID, records[0].ID, dnsRecord)
+	logger.Info("Updating %s %s -> %s record", dnsType, dnsName, ip)
+	return a.api.UpdateDNSRecord(ctx, zoneIdentifier, cloudflare.UpdateDNSRecordParams{
+		ID:      records[0].ID,
+		Type:    dnsType,
+		Name:    dnsName,
+		Content: ip,
+		Proxied: &a.proxied,
+	})
 }
