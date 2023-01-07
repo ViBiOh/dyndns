@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"os"
 
@@ -20,9 +21,11 @@ func main() {
 
 	logger.Fatal(fs.Parse(os.Args[1:]))
 
+	ctx := context.Background()
+
 	logger.Global(logger.New(loggerConfig))
 
-	currentIP, err := ip.Get(*url, *network)
+	currentIP, err := ip.Get(ctx, *url, *network)
 	logger.Fatal(err)
 
 	logger.Info("Current IP is: %s", currentIP)
@@ -30,5 +33,5 @@ func main() {
 	dyndnsApp, err := dyndns.New(dyndnsConfig)
 	logger.Fatal(err)
 
-	logger.Fatal(dyndnsApp.Do(currentIP))
+	logger.Fatal(dyndnsApp.Do(ctx, currentIP))
 }

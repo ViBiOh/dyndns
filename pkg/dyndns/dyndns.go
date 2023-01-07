@@ -58,8 +58,8 @@ func New(config Config) (App, error) {
 }
 
 // Do update dyndns on cloudflare
-func (a App) Do(ip string) error {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+func (a App) Do(ctx context.Context, ip string) error {
+	ctx, cancel := context.WithTimeout(ctx, time.Second*30)
 	defer cancel()
 
 	zoneID, err := a.api.ZoneIDByName(a.domain)
