@@ -1,7 +1,7 @@
 github.com/ViBiOh/flags v1.2.0 h1:DaujjNXzD29KxKyp4eZdn7c9+uBN5DokWgDAe7DcUmc=
 github.com/ViBiOh/flags v1.2.0/go.mod h1:UyMB5zeD/aId7Xw3x7577ZNU298JmukzOcV8p/H2W1s=
-github.com/ViBiOh/httputils/v4 v4.53.1 h1:qZ+uQVQs/YDiPaS46+2TYRU7kEmhwEVKt0aItTc18m8=
-github.com/ViBiOh/httputils/v4 v4.53.1/go.mod h1:3GniJxg5pa87dENNVZJ0M2hGyvrWdp/uZmCTswSS2wU=
+github.com/ViBiOh/httputils/v4 v4.53.2 h1:bg7jPD3N/7VNqZRAoVDRjIgmTUcTo6PsgH7MtXoVfW4=
+github.com/ViBiOh/httputils/v4 v4.53.2/go.mod h1:3GniJxg5pa87dENNVZJ0M2hGyvrWdp/uZmCTswSS2wU=
 github.com/cloudflare/cloudflare-go v0.60.0 h1:Lwt9Nok5LHAkFY4g5jOjbDLAdKpb5qDhQpvU0ie1eNc=
 github.com/cloudflare/cloudflare-go v0.60.0/go.mod h1:qmuJW7P3KCRXYSTHkV7uS9qTeacr8gkqE60ekUwapqQ=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
