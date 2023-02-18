@@ -6,7 +6,7 @@ require (
 	github.com/ViBiOh/flags v1.2.0
 	github.com/ViBiOh/httputils/v4 v4.53.6
 	github.com/cloudflare/cloudflare-go v0.61.0
-	golang.org/x/net v0.0.0-20220826154423-83b083e8dc8b
+	golang.org/x/net v0.7.0
 )
 
 require (
@@ -25,5 +25,5 @@ require (
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/term v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
-	golang.org/x/time v0.0.0-20220722155302-e5dcc9cfc0b9 // indirect
+	golang.org/x/time v0.3.0 // indirect
 )
