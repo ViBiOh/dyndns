@@ -3,8 +3,8 @@ github.com/ViBiOh/flags v1.2.0/go.mod h1:UyMB5zeD/aId7Xw3x7577ZNU298JmukzOcV8p/H
 github.com/ViBiOh/httputils/v4 v4.53.7 h1:4Fm26QagVmJHkt/3HXWheHa2yMr8FDpbOuPa0KYT6GQ=
 github.com/ViBiOh/httputils/v4 v4.53.7/go.mod h1:l8EngRH5/msBSjGHDY7eoVH+8mOsb5EV1oQ4CfAJ9xw=
 github.com/cespare/xxhash/v2 v2.2.0 h1:DC2CZ1Ep5Y4k3ZQ899DldepgrayRUGE6BBZ/cd9Cj44=
-github.com/cloudflare/cloudflare-go v0.61.0 h1:h39WkNSA3CIMktE8rleiEwaJSc7bYCNCpzLAzCp//Kc=
-github.com/cloudflare/cloudflare-go v0.61.0/go.mod h1:9XgyMNcw8L8JhTKjasJNxx3vE7YM36g+GfNoIKxYPpI=
+github.com/cloudflare/cloudflare-go v0.62.0 h1:FOwBoG7Oc3EBFlmclBkD8vPkd2hIcxrAM7MDfGZCg9w=
+github.com/cloudflare/cloudflare-go v0.62.0/go.mod h1:QBQD+xZhDB6vzqmGHf5qcat0jaULUJGdD7PU2lsfedc=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f h1:lO4WD4F/rVNCu3HqELle0jiPLLBs70cWOduZpkS1E78=
@@ -38,7 +38,7 @@ github.com/redis/go-redis/v9 v9.0.2 h1:BA426Zqe/7r56kCcvxYLWe1mkaz71LKF77GwgFzSx
 github.com/streadway/amqp v1.0.0 h1:kuuDrUJFZL1QYL9hUNuCxNObNzB0bV/ZG5jV3RWAQgo=
 github.com/stretchr/objx v0.5.0 h1:1zr/of2m5FGMsad5YfcqgdqdWrIhu+EBEJRhR1U7z/c=
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
-github.com/stretchr/testify v1.8.1 h1:w7B6lhMri9wdJUVmEZPGGhZzrYTPvgJArz7wNPgYKsk=
+github.com/stretchr/testify v1.8.2 h1:+h33VjcLVPDHtOdpUCuF+7gSuG3yGIftsP1YvFihtJ8=
 go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.39.0 h1:vFEBG7SieZJzvnRWQ81jxpuEqe6J8Ex+hgc9CqOTzHc=
 go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.39.0/go.mod h1:9rgTcOKdIhDOC0IcAu8a+R+FChqSUBihKpM1lVNi6T0=
 go.opentelemetry.io/otel v1.13.0 h1:1ZAKnNQKwBBxFtww/GwxNUyTf0AxkZzrukO8MeXqe4Y=
