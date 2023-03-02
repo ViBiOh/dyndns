@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/ViBiOh/flags v1.2.0
 	github.com/ViBiOh/httputils/v4 v4.53.7
-	github.com/cloudflare/cloudflare-go v0.61.0
+	github.com/cloudflare/cloudflare-go v0.62.0
 	golang.org/x/net v0.7.0
 )
 
