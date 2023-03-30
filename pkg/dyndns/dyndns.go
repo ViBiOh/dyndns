@@ -100,11 +100,13 @@ func (a App) Do(ctx context.Context, ip string) error {
 	}
 
 	logger.Info("Updating %s %s -> %s record", dnsType, dnsName, ip)
-	return a.api.UpdateDNSRecord(ctx, zoneIdentifier, cloudflare.UpdateDNSRecordParams{
+	_, err = a.api.UpdateDNSRecord(ctx, zoneIdentifier, cloudflare.UpdateDNSRecordParams{
 		ID:      records[0].ID,
 		Type:    dnsType,
 		Name:    dnsName,
 		Content: ip,
 		Proxied: &a.proxied,
 	})
+
+	return err
 }
