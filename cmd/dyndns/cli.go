@@ -14,8 +14,8 @@ import (
 func main() {
 	fs := flag.NewFlagSet("dyndns", flag.ExitOnError)
 
-	url := flags.String(fs, "", "ip", "URL", "URL for getting IPv4 or v6", "https://api64.ipify.org", nil)
-	network := flags.String(fs, "", "ip", "Network", "Network", "tcp4", nil)
+	url := flags.New("URL", "URL for getting IPv4 or v6").DocPrefix("ip").String(fs, "https://api64.ipify.org", nil)
+	network := flags.New("Network", "Network").DocPrefix("ip").String(fs, "tcp4", nil)
 	loggerConfig := logger.Flags(fs, "logger")
 	dyndnsConfig := dyndns.Flags(fs, "")
 

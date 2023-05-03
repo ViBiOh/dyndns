@@ -3,8 +3,8 @@ module github.com/ViBiOh/dyndns
 go 1.20
 
 require (
-	github.com/ViBiOh/flags v1.3.0
-	github.com/ViBiOh/httputils/v4 v4.57.0
+	github.com/ViBiOh/flags v1.3.1
+	github.com/ViBiOh/httputils/v4 v4.57.1
 	github.com/cloudflare/cloudflare-go v0.66.0
 	golang.org/x/net v0.9.0
 )
