@@ -13,35 +13,29 @@ import (
 	"golang.org/x/net/context"
 )
 
-// App of package
 type App struct {
-	api *cloudflare.API
-
-	domain string
-	entry  string
-
+	api     *cloudflare.API
+	entry   string
+	domains []string
 	proxied bool
 }
 
-// Config of package
 type Config struct {
 	token   *string
-	domain  *string
+	domains *[]string
 	entry   *string
 	proxied *bool
 }
 
-// Flags adds flags for configuring package
 func Flags(fs *flag.FlagSet, prefix string) Config {
 	return Config{
 		token:   flags.New("Token", "Cloudflare token").Prefix(prefix).DocPrefix("dyndns").String(fs, "", nil),
-		domain:  flags.New("Domain", "Domain to configure").Prefix(prefix).DocPrefix("dyndns").String(fs, "", nil),
+		domains: flags.New("Domain", "Domain to configure").Prefix(prefix).DocPrefix("dyndns").StringSlice(fs, nil, nil),
 		entry:   flags.New("Entry", "DNS Entry CNAME").Prefix(prefix).DocPrefix("dyndns").String(fs, "dyndns", nil),
 		proxied: flags.New("Proxied", "Proxied").Prefix(prefix).DocPrefix("dyndns").Bool(fs, false, nil),
 	}
 }
 
-// New creates new App from Config
 func New(config Config) (App, error) {
 	api, err := cloudflare.NewWithAPIToken(strings.TrimSpace(*config.token))
 	if err != nil {
@@ -49,7 +43,7 @@ func New(config Config) (App, error) {
 	}
 
 	return App{
-		domain:  strings.TrimSpace(*config.domain),
+		domains: *config.domains,
 		entry:   strings.TrimSpace(*config.entry),
 		proxied: *config.proxied,
 
@@ -57,14 +51,23 @@ func New(config Config) (App, error) {
 	}, nil
 }
 
-// Do update dyndns on cloudflare
 func (a App) Do(ctx context.Context, ip string) error {
+	for _, domain := range a.domains {
+		if err := a.do(ctx, ip, domain); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (a App) do(ctx context.Context, ip, domain string) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Second*30)
 	defer cancel()
 
-	zoneID, err := a.api.ZoneIDByName(a.domain)
+	zoneID, err := a.api.ZoneIDByName(domain)
 	if err != nil {
-		return fmt.Errorf("found zone by name: %w", err)
+		return fmt.Errorf("get zone by name: %w", err)
 	}
 
 	dnsType := "A"
@@ -72,10 +75,12 @@ func (a App) Do(ctx context.Context, ip string) error {
 		dnsType = "AAAA"
 	}
 
-	dnsName := fmt.Sprintf("%s.%s", a.entry, a.domain)
+	dnsName := fmt.Sprintf("%s.%s", a.entry, domain)
 
-	zoneIdentifier := cloudflare.ZoneIdentifier(zoneID)
+	return a.upsertEntry(ctx, cloudflare.ZoneIdentifier(zoneID), dnsType, dnsName, ip)
+}
 
+func (a App) upsertEntry(ctx context.Context, zoneIdentifier *cloudflare.ResourceContainer, dnsType, dnsName, content string) error {
 	records, results, err := a.api.ListDNSRecords(ctx, zoneIdentifier, cloudflare.ListDNSRecordsParams{
 		Type: dnsType,
 		Name: dnsName,
@@ -85,11 +90,11 @@ func (a App) Do(ctx context.Context, ip string) error {
 	}
 
 	if results.Count == 0 {
-		logger.Info("Creating %s %s -> %s record", dnsType, dnsName, ip)
+		logger.Info("Creating %s %s -> %s record", dnsType, dnsName, content)
 		_, err := a.api.CreateDNSRecord(ctx, zoneIdentifier, cloudflare.CreateDNSRecordParams{
 			Type:    dnsType,
 			Name:    dnsName,
-			Content: ip,
+			Content: content,
 			Proxied: &a.proxied,
 		})
 		if err != nil {
@@ -99,14 +104,18 @@ func (a App) Do(ctx context.Context, ip string) error {
 		return nil
 	}
 
-	logger.Info("Updating %s %s -> %s record", dnsType, dnsName, ip)
+	logger.Info("Updating %s %s -> %s record", dnsType, dnsName, content)
 	_, err = a.api.UpdateDNSRecord(ctx, zoneIdentifier, cloudflare.UpdateDNSRecordParams{
 		ID:      records[0].ID,
 		Type:    dnsType,
 		Name:    dnsName,
-		Content: ip,
+		Content: content,
 		Proxied: &a.proxied,
 	})
 
-	return err
+	if err != nil {
+		return fmt.Errorf("update dns record: %w", err)
+	}
+
+	return nil
 }
