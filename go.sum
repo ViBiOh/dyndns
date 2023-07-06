@@ -5,8 +5,8 @@ github.com/ViBiOh/httputils/v4 v4.59.1/go.mod h1:ELUeazDZnPFKK0dt0slbB3jWX1luY6C
 github.com/cenkalti/backoff/v4 v4.2.1 h1:y4OZtCnogmCPw98Zjyt5a6+QwPLGkiQsYW5oUqylYbM=
 github.com/cenkalti/backoff/v4 v4.2.1/go.mod h1:Y3VNntkOUPxTVeUxJ/G5vcM//AlwfmyYozVcomhLiZE=
 github.com/cespare/xxhash/v2 v2.2.0 h1:DC2CZ1Ep5Y4k3ZQ899DldepgrayRUGE6BBZ/cd9Cj44=
-github.com/cloudflare/cloudflare-go v0.71.0 h1:tNZWBNgfirbBclBSmRut8zUgdVJFJFkQo2MTXpeuy/M=
-github.com/cloudflare/cloudflare-go v0.71.0/go.mod h1:VW6GuazkaZ4xEDkFt24lkXQUsE8q7BiGqDniC2s8WEM=
+github.com/cloudflare/cloudflare-go v0.72.0 h1:khsJV4IE3I7U8eK9CUreGnxQm16MEFN5d0xPJfPnA+0=
+github.com/cloudflare/cloudflare-go v0.72.0/go.mod h1:VW6GuazkaZ4xEDkFt24lkXQUsE8q7BiGqDniC2s8WEM=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f h1:lO4WD4F/rVNCu3HqELle0jiPLLBs70cWOduZpkS1E78=
