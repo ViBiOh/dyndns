@@ -6,7 +6,7 @@ require (
 	github.com/ViBiOh/flags v1.3.1
 	github.com/ViBiOh/httputils/v4 v4.61.2
 	github.com/cloudflare/cloudflare-go v0.73.0
-	golang.org/x/net v0.12.0
+	golang.org/x/net v0.13.0
 )
 
 require (
