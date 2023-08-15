@@ -4,13 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"net"
 	"net/http"
 	"strings"
 	"syscall"
 	"time"
 
-	"github.com/ViBiOh/httputils/v4/pkg/logger"
 	"github.com/ViBiOh/httputils/v4/pkg/request"
 )
 
@@ -49,7 +49,7 @@ func Get(ctx context.Context, url, wantedNetwork string) (string, error) {
 	for i := 0; i < 3; i++ {
 		response, err := request.DoWithClient(&httpClient, req)
 		if err != nil {
-			logger.Error("attempt #%d failed with error: %s", i+1, err)
+			slog.Error("get ip", "err", err, "attempt", i+1)
 			time.Sleep(time.Second)
 			continue
 		}

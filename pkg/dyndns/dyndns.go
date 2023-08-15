@@ -3,12 +3,12 @@ package dyndns
 import (
 	"flag"
 	"fmt"
+	"log/slog"
 	"net"
 	"strings"
 	"time"
 
 	"github.com/ViBiOh/flags"
-	"github.com/ViBiOh/httputils/v4/pkg/logger"
 	"github.com/cloudflare/cloudflare-go"
 	"golang.org/x/net/context"
 )
@@ -90,7 +90,7 @@ func (a App) upsertEntry(ctx context.Context, zoneIdentifier *cloudflare.Resourc
 	}
 
 	if results.Count == 0 {
-		logger.Info("Creating %s %s -> %s record", dnsType, dnsName, content)
+		slog.Info("Creating record", "type", dnsType, "name", dnsName, "content", content)
 		_, err := a.api.CreateDNSRecord(ctx, zoneIdentifier, cloudflare.CreateDNSRecordParams{
 			Type:    dnsType,
 			Name:    dnsName,
@@ -104,7 +104,7 @@ func (a App) upsertEntry(ctx context.Context, zoneIdentifier *cloudflare.Resourc
 		return nil
 	}
 
-	logger.Info("Updating %s %s -> %s record", dnsType, dnsName, content)
+	slog.Info("Updating record", "type", dnsType, "name", dnsName, "content", content)
 	_, err = a.api.UpdateDNSRecord(ctx, zoneIdentifier, cloudflare.UpdateDNSRecordParams{
 		ID:      records[0].ID,
 		Type:    dnsType,

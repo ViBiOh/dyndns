@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"log/slog"
 	"os"
 
 	"github.com/ViBiOh/dyndns/pkg/dyndns"
@@ -20,19 +21,31 @@ func main() {
 	loggerConfig := logger.Flags(fs, "logger")
 	dyndnsConfig := dyndns.Flags(fs, "")
 
-	logger.Fatal(fs.Parse(os.Args[1:]))
+	if err := fs.Parse(os.Args[1:]); err != nil {
+		slog.Error("parse flags", "err", err)
+		os.Exit(1)
+	}
+
+	logger.New(loggerConfig)
 
 	ctx := context.Background()
 
-	logger.Global(logger.New(loggerConfig))
-
 	currentIP, err := ip.Get(ctx, *url, *network)
-	logger.Fatal(err)
+	if err != nil {
+		slog.Error("get ip", "err", err)
+		os.Exit(1)
+	}
 
-	logger.Info("Current IP is: %s", currentIP)
+	slog.Info("Current IP", "ip", currentIP)
 
 	dyndnsApp, err := dyndns.New(dyndnsConfig)
-	logger.Fatal(err)
+	if err != nil {
+		slog.Error("create dyndns", "err", err)
+		os.Exit(1)
+	}
 
-	logger.Fatal(dyndnsApp.Do(ctx, currentIP))
+	if err := dyndnsApp.Do(ctx, currentIP); err != nil {
+		slog.Error("execute dyndns", "err", err)
+		os.Exit(1)
+	}
 }
