@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/ViBiOh/flags v1.3.1
 	github.com/ViBiOh/httputils/v4 v4.62.0
-	github.com/cloudflare/cloudflare-go v0.74.0
+	github.com/cloudflare/cloudflare-go v0.75.0
 	golang.org/x/net v0.14.0
 )
 
@@ -14,6 +14,7 @@ require (
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
+	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.16.2 // indirect
