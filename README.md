@@ -19,7 +19,7 @@ Usage of dyndns:
   --loggerJson                      [logger] Log format as JSON ${DYNDNS_LOGGER_JSON} (default false)
   --loggerLevel       string        [logger] Logger level ${DYNDNS_LOGGER_LEVEL} (default "INFO")
   --loggerLevelKey    string        [logger] Key for level in JSON ${DYNDNS_LOGGER_LEVEL_KEY} (default "level")
-  --loggerMessageKey  string        [logger] Key for message in JSON ${DYNDNS_LOGGER_MESSAGE_KEY} (default "message")
+  --loggerMessageKey  string        [logger] Key for message in JSON ${DYNDNS_LOGGER_MESSAGE_KEY} (default "msg")
   --loggerTimeKey     string        [logger] Key for timestamp in JSON ${DYNDNS_LOGGER_TIME_KEY} (default "time")
   --network           string        [ip] Network ${DYNDNS_NETWORK} (default "tcp4")
   --proxied                         [dyndns] Proxied ${DYNDNS_PROXIED} (default false)
