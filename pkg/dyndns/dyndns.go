@@ -26,7 +26,7 @@ type Config struct {
 	Proxied bool
 }
 
-func Flags(fs *flag.FlagSet, prefix string) Config {
+func Flags(fs *flag.FlagSet, prefix string) *Config {
 	var config Config
 
 	flags.New("Token", "Cloudflare token").Prefix(prefix).DocPrefix("dyndns").StringVar(fs, &config.Token, "", nil)
@@ -34,10 +34,10 @@ func Flags(fs *flag.FlagSet, prefix string) Config {
 	flags.New("Entry", "DNS Entry CNAME").Prefix(prefix).DocPrefix("dyndns").StringVar(fs, &config.Entry, "dyndns", nil)
 	flags.New("Proxied", "Proxied").Prefix(prefix).DocPrefix("dyndns").BoolVar(fs, &config.Proxied, false, nil)
 
-	return config
+	return &config
 }
 
-func New(config Config) (Service, error) {
+func New(config *Config) (Service, error) {
 	api, err := cloudflare.NewWithAPIToken(config.Token)
 	if err != nil {
 		return Service{}, fmt.Errorf("create API client: %w", err)
