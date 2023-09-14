@@ -7,7 +7,7 @@ toolchain go1.21.0
 require (
 	github.com/ViBiOh/flags v1.4.1
 	github.com/ViBiOh/httputils/v4 v4.64.5
-	github.com/cloudflare/cloudflare-go v0.76.0
+	github.com/cloudflare/cloudflare-go v0.77.0
 	golang.org/x/net v0.15.0
 )
 
