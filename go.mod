@@ -8,7 +8,7 @@ require (
 	github.com/ViBiOh/flags v1.4.1
 	github.com/ViBiOh/httputils/v4 v4.66.5
 	github.com/cloudflare/cloudflare-go v0.78.0
-	golang.org/x/net v0.16.0
+	golang.org/x/net v0.17.0
 )
 
 require (
