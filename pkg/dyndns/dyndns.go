@@ -91,7 +91,7 @@ func (s Service) upsertEntry(ctx context.Context, zoneIdentifier *cloudflare.Res
 	}
 
 	if results.Count == 0 {
-		slog.Info("Creating record", "type", dnsType, "name", dnsName, "content", content)
+		slog.InfoContext(ctx, "Creating record", "type", dnsType, "name", dnsName, "content", content)
 		_, err := s.api.CreateDNSRecord(ctx, zoneIdentifier, cloudflare.CreateDNSRecordParams{
 			Type:    dnsType,
 			Name:    dnsName,
@@ -105,7 +105,7 @@ func (s Service) upsertEntry(ctx context.Context, zoneIdentifier *cloudflare.Res
 		return nil
 	}
 
-	slog.Info("Updating record", "type", dnsType, "name", dnsName, "content", content)
+	slog.InfoContext(ctx, "Updating record", "type", dnsType, "name", dnsName, "content", content)
 	_, err = s.api.UpdateDNSRecord(ctx, zoneIdentifier, cloudflare.UpdateDNSRecordParams{
 		ID:      records[0].ID,
 		Type:    dnsType,

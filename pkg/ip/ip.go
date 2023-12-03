@@ -49,7 +49,7 @@ func Get(ctx context.Context, url, wantedNetwork string) (string, error) {
 	for i := 0; i < 3; i++ {
 		response, err := request.DoWithClient(&httpClient, req)
 		if err != nil {
-			slog.Error("get ip", "err", err, "attempt", i+1)
+			slog.ErrorContext(ctx, "get ip", "err", err, "attempt", i+1)
 			time.Sleep(time.Second)
 			continue
 		}
