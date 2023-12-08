@@ -32,7 +32,7 @@ func main() {
 
 	currentIP, err := ip.Get(ctx, *url, *network)
 	if err != nil {
-		slog.ErrorContext(ctx, "get ip", "err", err)
+		slog.ErrorContext(ctx, "get ip", "error", err)
 		os.Exit(1)
 	}
 
@@ -40,12 +40,12 @@ func main() {
 
 	dyndnsApp, err := dyndns.New(dyndnsConfig)
 	if err != nil {
-		slog.ErrorContext(ctx, "create dyndns", "err", err)
+		slog.ErrorContext(ctx, "create dyndns", "error", err)
 		os.Exit(1)
 	}
 
 	if err := dyndnsApp.Do(ctx, currentIP); err != nil {
-		slog.ErrorContext(ctx, "execute dyndns", "err", err)
+		slog.ErrorContext(ctx, "execute dyndns", "error", err)
 		os.Exit(1)
 	}
 }
