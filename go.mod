@@ -6,7 +6,7 @@ toolchain go1.21.0
 
 require (
 	github.com/ViBiOh/flags v1.4.1
-	github.com/ViBiOh/httputils/v4 v4.69.6
+	github.com/ViBiOh/httputils/v4 v4.69.7
 	github.com/cloudflare/cloudflare-go v0.83.0
 	golang.org/x/net v0.19.0
 )
@@ -22,6 +22,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.1 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-retryablehttp v0.7.5 // indirect
+	github.com/rabbitmq/amqp091-go v1.9.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.46.1 // indirect
 	go.opentelemetry.io/contrib/instrumentation/runtime v0.46.1 // indirect
 	go.opentelemetry.io/otel v1.21.0 // indirect
