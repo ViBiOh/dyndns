@@ -33,13 +33,13 @@ func main() {
 	currentIP, err := ip.Get(ctx, *url, *network)
 	logger.FatalfOnErr(ctx, err, "get ip")
 
-	slog.Info("Current IP", "ip", currentIP)
+	slog.LogAttrs(ctx, slog.LevelInfo, "Current IP", slog.String("ip", currentIP))
 
 	dyndnsApp, err := dyndns.New(dyndnsConfig)
 	logger.FatalfOnErr(ctx, err, "create dyndns")
 
 	if err := dyndnsApp.Do(ctx, currentIP); err != nil {
-		slog.ErrorContext(ctx, "execute dyndns", "error", err)
+		slog.LogAttrs(ctx, slog.LevelError, "execute dyndns", slog.Any("error", err))
 		os.Exit(1)
 	}
 }
