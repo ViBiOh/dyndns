@@ -113,7 +113,6 @@ func (s Service) upsertEntry(ctx context.Context, zoneIdentifier *cloudflare.Res
 		Content: content,
 		Proxied: &s.proxied,
 	})
-
 	if err != nil {
 		return fmt.Errorf("update dns record: %w", err)
 	}
