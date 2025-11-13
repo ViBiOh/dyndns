@@ -1,11 +1,9 @@
 module github.com/ViBiOh/dyndns
 
-go 1.21
-
-toolchain go1.21.0
+go 1.25
 
 require (
-	github.com/ViBiOh/flags v1.5.0
+	github.com/ViBiOh/flags v1.6.1
 	github.com/ViBiOh/httputils/v4 v4.71.5
 	github.com/cloudflare/cloudflare-go v0.87.0
 	golang.org/x/net v0.20.0
