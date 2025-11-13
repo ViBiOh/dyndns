@@ -17,7 +17,7 @@ func main() {
 	fs := flag.NewFlagSet("dyndns", flag.ExitOnError)
 	fs.Usage = flags.Usage(fs)
 
-	url := flags.New("URL", "URL for getting IPv4 or v6").DocPrefix("ip").String(fs, "https://api64.ipify.org", nil)
+	url := flags.New("URL", "URL for getting IPv4 or v6").DocPrefix("ip").String(fs, "https://ifconfig.co/ip", nil)
 	network := flags.New("Network", "Network").DocPrefix("ip").String(fs, "tcp4", nil)
 	loggerConfig := logger.Flags(fs, "logger")
 	dyndnsConfig := dyndns.Flags(fs, "")
@@ -26,9 +26,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	logger.Init(loggerConfig)
-
 	ctx := context.Background()
+
+	logger.Init(ctx, loggerConfig)
 
 	currentIP, err := ip.Get(ctx, *url, *network)
 	logger.FatalfOnErr(ctx, err, "get ip")

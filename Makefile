@@ -8,7 +8,7 @@ endif
 APP_NAME = dyndns
 PACKAGES ?= ./...
 
-MAIN_SOURCE = cmd/dyndns/cli.go
+MAIN_SOURCE = ./cmd/dyndns
 MAIN_RUNNER = go run $(MAIN_SOURCE)
 ifeq ($(DEBUG), true)
 	MAIN_RUNNER = dlv debug $(MAIN_SOURCE) --
@@ -52,7 +52,7 @@ dev: format style test build
 ## init: Bootstrap your application. e.g. fetch some data files, make some API calls, request user input etc...
 .PHONY: init
 init:
-	@curl --disable --silent --show-error --location --max-time 30 "https://raw.githubusercontent.com/ViBiOh/scripts/main/bootstrap" | bash -s -- "-c" "git_hooks" "coverage" "release"
+	@curl --disable --silent --show-error --location --max-time 30 "https://raw.githubusercontent.com/ViBiOh/scripts/main/bootstrap.sh" | bash -s -- "-c" "git_hooks" "coverage.sh" "release.sh"
 	go install "github.com/golangci/golangci-lint/cmd/golangci-lint@latest"
 	go install "golang.org/x/tools/cmd/goimports@latest"
 	go install "golang.org/x/tools/go/analysis/passes/fieldalignment/cmd/fieldalignment@master"
@@ -63,7 +63,7 @@ init:
 .PHONY: format
 format:
 	find . -name "*.go" -exec goimports -w {} \+
-	find . -name "*.go" -exec gofumpt -w {} \+
+	find . -name "*.go" -exec gofumpt -extra -w {} \+
 
 ## style: Check lint, code styling rules. e.g. pylint, phpcs, eslint, style (java) etc ...
 .PHONY: style
@@ -74,7 +74,7 @@ style:
 ## test: Shortcut to launch all the test tasks (unit, functional and integration).
 .PHONY: test
 test:
-	scripts/coverage
+	scripts/coverage.sh
 	$(MAKE) bench
 
 ## bench: Shortcut to launch benchmark tests.
@@ -91,3 +91,8 @@ build:
 .PHONY: run
 run:
 	$(MAIN_RUNNER)
+
+## config: Create local configuration
+.PHONY: config
+config:
+	@cp .env.example .env

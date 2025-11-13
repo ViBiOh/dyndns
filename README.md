@@ -1,9 +1,5 @@
 # dyndns
 
-[![Build](https://github.com/ViBiOh/dyndns/workflows/Build/badge.svg)](https://github.com/ViBiOh/dyndns/actions)
-[![codecov](https://codecov.io/gh/ViBiOh/dyndns/branch/main/graph/badge.svg)](https://codecov.io/gh/ViBiOh/dyndns)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ViBiOh_dyndns&metric=alert_status)](https://sonarcloud.io/dashboard?id=ViBiOh_dyndns)
-
 Create or update a root A record for your DNS zone on Cloudflare based on your public IP.
 
 ## Usage
@@ -24,5 +20,5 @@ Usage of dyndns:
   --network           string        [ip] Network ${DYNDNS_NETWORK} (default "tcp4")
   --proxied                         [dyndns] Proxied ${DYNDNS_PROXIED} (default false)
   --token             string        [dyndns] Cloudflare token ${DYNDNS_TOKEN}
-  --uRL               string        [ip] URL for getting IPv4 or v6 ${DYNDNS_URL} (default "https://api64.ipify.org")
+  --uRL               string        [ip] URL for getting IPv4 or v6 ${DYNDNS_URL} (default "https://ifconfig.co/ip")
 ```

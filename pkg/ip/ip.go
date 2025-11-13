@@ -14,7 +14,8 @@ import (
 	"github.com/ViBiOh/httputils/v4/pkg/request"
 )
 
-// Get returns current IP
+const maxRetry = 3
+
 func Get(ctx context.Context, url, wantedNetwork string) (string, error) {
 	req, err := request.Get(url).Build(ctx, nil)
 	if err != nil {
@@ -46,10 +47,10 @@ func Get(ctx context.Context, url, wantedNetwork string) (string, error) {
 		},
 	}
 
-	for i := 0; i < 3; i++ {
+	for range maxRetry {
 		response, err := request.DoWithClient(&httpClient, req)
 		if err != nil {
-			slog.LogAttrs(ctx, slog.LevelError, "get ip", slog.Int("attempt", i+1), slog.Any("error", err))
+			slog.LogAttrs(ctx, slog.LevelError, "get ip", slog.Any("error", err))
 			time.Sleep(time.Second)
 			continue
 		}

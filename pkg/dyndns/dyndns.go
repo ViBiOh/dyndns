@@ -1,6 +1,8 @@
 package dyndns
 
 import (
+	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"log/slog"
@@ -8,12 +10,14 @@ import (
 	"time"
 
 	"github.com/ViBiOh/flags"
-	"github.com/cloudflare/cloudflare-go"
-	"golang.org/x/net/context"
+	"github.com/cloudflare/cloudflare-go/v6"
+	"github.com/cloudflare/cloudflare-go/v6/dns"
+	"github.com/cloudflare/cloudflare-go/v6/option"
+	"github.com/cloudflare/cloudflare-go/v6/zones"
 )
 
 type Service struct {
-	api     *cloudflare.API
+	api     *cloudflare.Client
 	entry   string
 	domains []string
 	proxied bool
@@ -29,7 +33,7 @@ type Config struct {
 func Flags(fs *flag.FlagSet, prefix string) *Config {
 	var config Config
 
-	flags.New("Token", "Cloudflare token").Prefix(prefix).DocPrefix("dyndns").StringVar(fs, &config.Token, "", nil)
+	flags.New("Token", "Cloudflare API Token").Prefix(prefix).DocPrefix("dyndns").StringVar(fs, &config.Token, "", nil)
 	flags.New("Domain", "Domain to configure").Prefix(prefix).DocPrefix("dyndns").StringSliceVar(fs, &config.Domains, nil, nil)
 	flags.New("Entry", "DNS Entry CNAME").Prefix(prefix).DocPrefix("dyndns").StringVar(fs, &config.Entry, "dyndns", nil)
 	flags.New("Proxied", "Proxied").Prefix(prefix).DocPrefix("dyndns").BoolVar(fs, &config.Proxied, false, nil)
@@ -38,10 +42,7 @@ func Flags(fs *flag.FlagSet, prefix string) *Config {
 }
 
 func New(config *Config) (Service, error) {
-	api, err := cloudflare.NewWithAPIToken(config.Token)
-	if err != nil {
-		return Service{}, fmt.Errorf("create API client: %w", err)
-	}
+	api := cloudflare.NewClient(option.WithAPIToken(config.Token))
 
 	return Service{
 		domains: config.Domains,
@@ -66,37 +67,42 @@ func (s Service) do(ctx context.Context, ip, domain string) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Second*30)
 	defer cancel()
 
-	zoneID, err := s.api.ZoneIDByName(domain)
+	zones, err := s.api.Zones.List(ctx, zones.ZoneListParams{Name: cloudflare.F(domain)})
 	if err != nil {
-		return fmt.Errorf("get zone by name: %w", err)
+		return fmt.Errorf("list zones: %w", err)
 	}
 
-	dnsType := "A"
+	if len(zones.Result) == 0 {
+		return errors.New("domain not found")
+	}
+
+	dnsType := dns.RecordListParamsTypeA
 	if len(ip) == net.IPv6len {
-		dnsType = "AAAA"
+		dnsType = dns.RecordListParamsTypeAAAA
 	}
 
 	dnsName := fmt.Sprintf("%s.%s", s.entry, domain)
 
-	return s.upsertEntry(ctx, cloudflare.ZoneIdentifier(zoneID), dnsType, dnsName, ip)
+	return s.upsertEntry(ctx, zones.Result[0].ID, dnsName, ip, dnsType)
 }
 
-func (s Service) upsertEntry(ctx context.Context, zoneIdentifier *cloudflare.ResourceContainer, dnsType, dnsName, content string) error {
-	records, results, err := s.api.ListDNSRecords(ctx, zoneIdentifier, cloudflare.ListDNSRecordsParams{
-		Type: dnsType,
-		Name: dnsName,
+func (s Service) upsertEntry(ctx context.Context, zoneID, dnsName, content string, dnsType dns.RecordListParamsType) error {
+	records, err := s.api.DNS.Records.List(ctx, dns.RecordListParams{
+		ZoneID: cloudflare.F(zoneID),
+		Name: cloudflare.F(dns.RecordListParamsName{
+			Exact: cloudflare.F(dnsName),
+		}),
+		Type: cloudflare.F(dnsType),
 	})
 	if err != nil {
 		return fmt.Errorf("list dns records: %w", err)
 	}
 
-	if results.Count == 0 {
-		slog.LogAttrs(ctx, slog.LevelInfo, "Creating record", slog.String("type", dnsType), slog.String("name", dnsName), slog.String("content", content))
-		_, err := s.api.CreateDNSRecord(ctx, zoneIdentifier, cloudflare.CreateDNSRecordParams{
-			Type:    dnsType,
-			Name:    dnsName,
-			Content: content,
-			Proxied: &s.proxied,
+	if len(records.Result) == 0 {
+		slog.LogAttrs(ctx, slog.LevelInfo, "Creating record", slog.String("type", string(dnsType)), slog.String("name", dnsName), slog.String("content", content))
+		_, err := s.api.DNS.Records.New(ctx, dns.RecordNewParams{
+			ZoneID: cloudflare.F(zoneID),
+			Body:   s.getNewBody(dnsType, dnsName, content),
 		})
 		if err != nil {
 			return fmt.Errorf("create dns record: %w", err)
@@ -105,17 +111,62 @@ func (s Service) upsertEntry(ctx context.Context, zoneIdentifier *cloudflare.Res
 		return nil
 	}
 
-	slog.LogAttrs(ctx, slog.LevelInfo, "Updating record", slog.String("type", dnsType), slog.String("name", dnsName), slog.String("content", content))
-	_, err = s.api.UpdateDNSRecord(ctx, zoneIdentifier, cloudflare.UpdateDNSRecordParams{
-		ID:      records[0].ID,
-		Type:    dnsType,
-		Name:    dnsName,
-		Content: content,
-		Proxied: &s.proxied,
+	records.Result[0].Content = content
+
+	slog.LogAttrs(ctx, slog.LevelInfo, "Updating record", slog.String("type", string(dnsType)), slog.String("name", dnsName), slog.String("content", content))
+	_, err = s.api.DNS.Records.Update(ctx, records.Result[0].ID, dns.RecordUpdateParams{
+		ZoneID: cloudflare.F(zoneID),
+		Body:   s.getUpdateBody(dnsType, dnsName, content),
 	})
 	if err != nil {
 		return fmt.Errorf("update dns record: %w", err)
 	}
 
 	return nil
+}
+
+func (s Service) getNewBody(dnsType dns.RecordListParamsType, dnsName, content string) dns.RecordNewParamsBodyUnion {
+	switch dnsType {
+	case dns.RecordListParamsTypeA:
+		return dns.ARecordParam{
+			Name:    cloudflare.F(dnsName),
+			Type:    cloudflare.F(dns.ARecordTypeA),
+			Content: cloudflare.F(content),
+			Proxied: cloudflare.F(s.proxied),
+		}
+
+	case dns.RecordListParamsTypeAAAA:
+		return dns.AAAARecordParam{
+			Name:    cloudflare.F(dnsName),
+			Type:    cloudflare.F(dns.AAAARecordTypeAAAA),
+			Content: cloudflare.F(content),
+			Proxied: cloudflare.F(s.proxied),
+		}
+
+	default:
+		return nil
+	}
+}
+
+func (s Service) getUpdateBody(dnsType dns.RecordListParamsType, dnsName, content string) dns.RecordUpdateParamsBodyUnion {
+	switch dnsType {
+	case dns.RecordListParamsTypeA:
+		return dns.ARecordParam{
+			Name:    cloudflare.F(dnsName),
+			Type:    cloudflare.F(dns.ARecordTypeA),
+			Content: cloudflare.F(content),
+			Proxied: cloudflare.F(s.proxied),
+		}
+
+	case dns.RecordListParamsTypeAAAA:
+		return dns.AAAARecordParam{
+			Name:    cloudflare.F(dnsName),
+			Type:    cloudflare.F(dns.AAAARecordTypeAAAA),
+			Content: cloudflare.F(content),
+			Proxied: cloudflare.F(s.proxied),
+		}
+
+	default:
+		return nil
+	}
 }
