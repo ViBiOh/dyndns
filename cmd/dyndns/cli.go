@@ -7,7 +7,7 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/ViBiOh/dyndns/pkg/dyndns"
+	"github.com/ViBiOh/dyndns/pkg/cloudflare"
 	"github.com/ViBiOh/dyndns/pkg/ip"
 	"github.com/ViBiOh/flags"
 	"github.com/ViBiOh/httputils/v4/pkg/logger"
@@ -20,7 +20,7 @@ func main() {
 	url := flags.New("URL", "URL for getting IPv4 or v6").DocPrefix("ip").String(fs, "https://ifconfig.co/ip", nil)
 	network := flags.New("Network", "Network").DocPrefix("ip").String(fs, "tcp4", nil)
 	loggerConfig := logger.Flags(fs, "logger")
-	dyndnsConfig := dyndns.Flags(fs, "")
+	dyndnsConfig := cloudflare.Flags(fs, "")
 
 	if err := fs.Parse(os.Args[1:]); err != nil {
 		log.Fatal(err)
@@ -35,11 +35,11 @@ func main() {
 
 	slog.LogAttrs(ctx, slog.LevelInfo, "Current IP", slog.String("ip", currentIP))
 
-	dyndnsApp, err := dyndns.New(dyndnsConfig)
-	logger.FatalfOnErr(ctx, err, "create dyndns")
+	app, err := cloudflare.New(dyndnsConfig)
+	logger.FatalfOnErr(ctx, err, "create cloudflare")
 
-	if err := dyndnsApp.Do(ctx, currentIP); err != nil {
-		slog.LogAttrs(ctx, slog.LevelError, "execute dyndns", slog.Any("error", err))
+	if err := app.Do(ctx, currentIP); err != nil {
+		slog.LogAttrs(ctx, slog.LevelError, "execute cloudflare", slog.Any("error", err))
 		os.Exit(1)
 	}
 }

@@ -1,4 +1,4 @@
-package dyndns
+package cloudflare
 
 import (
 	"context"
@@ -67,13 +67,13 @@ func (s Service) do(ctx context.Context, ip, domain string) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Second*30)
 	defer cancel()
 
-	zones, err := s.api.Zones.List(ctx, zones.ZoneListParams{Name: cloudflare.F(domain)})
+	zones, err := s.api.Zones.List(ctx, zones.ZoneListParams{Name: cloudflare.F(domain), PerPage: cloudflare.F(2.0)})
 	if err != nil {
 		return fmt.Errorf("list zones: %w", err)
 	}
 
-	if len(zones.Result) == 0 {
-		return errors.New("domain not found")
+	if len(zones.Result) != 1 {
+		return errors.New("multiple domains found or not found")
 	}
 
 	dnsType := dns.RecordListParamsTypeA
@@ -81,9 +81,7 @@ func (s Service) do(ctx context.Context, ip, domain string) error {
 		dnsType = dns.RecordListParamsTypeAAAA
 	}
 
-	dnsName := fmt.Sprintf("%s.%s", s.entry, domain)
-
-	return s.upsertEntry(ctx, zones.Result[0].ID, dnsName, ip, dnsType)
+	return s.upsertEntry(ctx, zones.Result[0].ID, fmt.Sprintf("%s.%s", s.entry, domain), ip, dnsType)
 }
 
 func (s Service) upsertEntry(ctx context.Context, zoneID, dnsName, content string, dnsType dns.RecordListParamsType) error {
@@ -92,7 +90,8 @@ func (s Service) upsertEntry(ctx context.Context, zoneID, dnsName, content strin
 		Name: cloudflare.F(dns.RecordListParamsName{
 			Exact: cloudflare.F(dnsName),
 		}),
-		Type: cloudflare.F(dnsType),
+		Type:    cloudflare.F(dnsType),
+		PerPage: cloudflare.F(2.0),
 	})
 	if err != nil {
 		return fmt.Errorf("list dns records: %w", err)
@@ -108,6 +107,14 @@ func (s Service) upsertEntry(ctx context.Context, zoneID, dnsName, content strin
 			return fmt.Errorf("create dns record: %w", err)
 		}
 
+		return nil
+	}
+
+	if len(records.Result) != 1 {
+		return errors.New("multiple records found")
+	}
+
+	if records.Result[0].Content == content {
 		return nil
 	}
 
