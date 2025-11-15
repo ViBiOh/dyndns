@@ -81,7 +81,7 @@ func (s Service) do(ctx context.Context, ip, domain string) error {
 		dnsType = dns.RecordListParamsTypeAAAA
 	}
 
-	return s.upsertEntry(ctx, zones.Result[0].ID, fmt.Sprintf("%s.%s", s.entry, domain), ip, dnsType)
+	return s.upsertEntry(ctx, zones.Result[0].ID, s.entry, ip, dnsType)
 }
 
 func (s Service) upsertEntry(ctx context.Context, zoneID, dnsName, content string, dnsType dns.RecordListParamsType) error {
