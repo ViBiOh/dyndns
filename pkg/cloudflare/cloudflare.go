@@ -35,7 +35,7 @@ func Flags(fs *flag.FlagSet, prefix string) *Config {
 
 	flags.New("Token", "Cloudflare API Token").Prefix(prefix).DocPrefix("dyndns").StringVar(fs, &config.Token, "", nil)
 	flags.New("Domain", "Domain to configure").Prefix(prefix).DocPrefix("dyndns").StringSliceVar(fs, &config.Domains, nil, nil)
-	flags.New("Entry", "DNS Entry CNAME").Prefix(prefix).DocPrefix("dyndns").StringVar(fs, &config.Entry, "dyndns", nil)
+	flags.New("Entry", "DNS Entry, @ for root").Prefix(prefix).DocPrefix("dyndns").StringVar(fs, &config.Entry, "dyndns", nil)
 	flags.New("Proxied", "Proxied").Prefix(prefix).DocPrefix("dyndns").BoolVar(fs, &config.Proxied, false, nil)
 
 	return &config
@@ -81,7 +81,12 @@ func (s Service) do(ctx context.Context, ip, domain string) error {
 		dnsType = dns.RecordListParamsTypeAAAA
 	}
 
-	return s.upsertEntry(ctx, zones.Result[0].ID, s.entry, ip, dnsType)
+	entry := s.entry
+	if entry == "@" {
+		entry = domain
+	}
+
+	return s.upsertEntry(ctx, zones.Result[0].ID, entry, ip, dnsType)
 }
 
 func (s Service) upsertEntry(ctx context.Context, zoneID, dnsName, content string, dnsType dns.RecordListParamsType) error {
