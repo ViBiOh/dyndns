@@ -11,5 +11,5 @@ ENV GIT_SHA=${GIT_SHA}
 ARG TARGETOS
 ARG TARGETARCH
 
-COPY ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+COPY cacert.pem /etc/ssl/cert.pem
 COPY release/dyndns_${TARGETOS}_${TARGETARCH} /dyndns
