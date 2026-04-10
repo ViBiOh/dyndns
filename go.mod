@@ -4,7 +4,7 @@ go 1.26
 
 require (
 	github.com/ViBiOh/flags v1.6.1
-	github.com/ViBiOh/httputils/v4 v4.86.0
+	github.com/ViBiOh/httputils/v4 v4.86.1
 	github.com/cloudflare/cloudflare-go/v6 v6.9.0
 )
 
